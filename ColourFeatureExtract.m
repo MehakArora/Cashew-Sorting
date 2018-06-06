@@ -17,8 +17,8 @@ function X = ColourFeatureExtract(Iseg,X)
         X = [stdH stdS X];
         
         %22. Skewness
-        skewH = skewness(skewness(H,1,2));
-        skewS = skewness(skewness(S,1,2));
+        skewH = skewness(H(:));
+        skewS = skewness(S(:));
         X = [skewH skewS X];
         
         %23. Delta E

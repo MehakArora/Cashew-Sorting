@@ -25,7 +25,7 @@ function X = ShapeSizeFeature(Ibin,X)
      totalpix = sz(1)*sz(2);
      AreaI = stats.Area;
      sizeI = AreaI/totalpix;
-     X = [sizeI X];
+     X = [AreaI X];
      
      %2.Major and 3.minor Axis and 4.Aspect ratio
      MajorAxis = stats.MajorAxisLength;
@@ -75,11 +75,10 @@ function X = ShapeSizeFeature(Ibin,X)
      Center = stats.Centroid;
      B = boundaries{1};
      D = B - Center;
-     D = D.^2;
+     D = sqrt(D.^2);
      R = fft(D);
      FF1 = R(1);
-     FF2 = R(2);
-     X = [FF1 FF2 X];
-     
+     %FF2 = R(2);
+     X = [FF1 X];
      
 end
