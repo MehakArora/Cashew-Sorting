@@ -28,7 +28,7 @@ Features :
 27. Major Axis
 28. Area
 
-
+TFeatures
 good
 1.W-450
 2.W-320
@@ -39,3 +39,6 @@ Defects
 6. BlackSpots
 7. Discolouration
 8. Mixed
+
+CVFeatures
+CV: Xcv Ycv
