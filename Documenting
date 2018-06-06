@@ -1,0 +1,41 @@
+Features : 
+1. DelE
+2. SkewS
+3. SkewH
+4. stdS
+5. stdH
+6. meanS
+7. meanH
+8. Entropy
+9. Homogeniety
+10.Correlation
+11.Contrast
+12.Energy
+13.FF1
+14.SF3
+15.SF2
+16.SF1
+17. Compactness
+18. Roundness
+19. Solidity
+20. Convex Area
+21. Extent
+22. Eq Diam
+23. Eccencricity
+24. Perimeter
+25. Aspect Ratio
+26. Minor Axis
+27. Major Axis
+28. Area
+
+
+good
+1.W-450
+2.W-320
+3.W-180
+4.SW-240
+5.Splits
+Defects
+6. BlackSpots
+7. Discolouration
+8. Mixed
