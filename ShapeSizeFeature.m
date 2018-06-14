@@ -1,30 +1,23 @@
-function X = ShapeSizeFeature(Ibin,X)
-     
-     %Ibin = Ibin(:,:,1);
-     %sz = size(Ibin);
-     
-     %Keeping the biggest component
+function X = ShapeSizeFeature(Ibin,Ig,X)
     
-     %CC = bwconncomp(Ibin);
-     %numPixels = cellfun(@numel,CC.PixelIdxList);
-     %[biggest,idx] = max(numPixels);
-     
-    % for i = 1:length(numPixels)
-     %     if (i ~=idx)
-      %         Ibin(CC.PixelIdxList{i}) = 0;
-      %    end
-     %end
     [Ibin,sz] = RemoveExtraComp(Ibin);
+    statso = regionprops(Ibin,'Orientation');
+    Angle = statso.Orientation;
+    Ibin = imrotate(Ibin, -Angle);
+    Ig = imrotate(Ig, -Angle);
+    Ibin = ImageResize(Ibin,800);
+    Ig = ImageResize(Ig,800);
+    B = GreatestBoundary(Ibin); 
+    Ig(Ibin == 0) = 0;
     
-    boundaries = bwboundaries(Ibin); 
+    stats = regionprops(Ibin,Ig,'MajorAxisLength','MinorAxisLength','Orientation',...
+    'Centroid','Solidity','ConvexArea', 'Extent','Perimeter','Area','MaxIntensity',...
+    'MinIntensity','MeanIntensity','WeightedCentroid','Eccentricity','EquivDiameter');
     
-     stats = regionprops(Ibin,'Area','Centroid','BoundingBox','MajorAxisLength','MinorAxisLength',...
-         'Eccentricity','Extent','EquivDiameter','Solidity','ConvexArea','Perimeter');
-     
-     %1. Size
-     totalpix = sz(1)*sz(2);
+     %1. AREA
+     %totalpix = sz(1)*sz(2);
      AreaI = stats.Area;
-     sizeI = AreaI/totalpix;
+     %sizeI = AreaI/totalpix;
      X = [AreaI X];
      
      %2.Major and 3.minor Axis and 4.Aspect ratio
@@ -73,12 +66,22 @@ function X = ShapeSizeFeature(Ibin,X)
      
      %14. Shape
      Center = stats.Centroid;
-     B = boundaries{1};
-     D = B - Center;
+     C = [Center(1,2) Center(1,1)];
+     D = B - C;
      D = sqrt(D.^2);
      R = fft(D);
      FF1 = R(1);
-     %FF2 = R(2);
      X = [FF1 X];
+     
+     %15.Min Intensity 16. Max Intensity 17.Mean Intensity
+     MinI = stats.MinIntensity;
+     MaxI = stats.MaxIntensity;
+     MeanI = stats.MeanIntensity;
+     X = [MeanI MaxI MinI X];
+     
+     %18.WeightedCentroid - Centroid
+     WC = stats.WeightedCentroid;
+     Distance = sqrt(sum(((WC-Center).^2),2));
+     X = [Distance X];
      
 end

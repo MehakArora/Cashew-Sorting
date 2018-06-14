@@ -1,4 +1,4 @@
-function [Iseg,Ibin] = ImageSegmentation(I)
+function [Iseg,Ibin,r] = ImageSegmentation(I)
     lab_he = rgb2hsv(I);
     ab = lab_he(:,:,2:3) ;   
     nrows = size(ab,1);
@@ -10,11 +10,31 @@ function [Iseg,Ibin] = ImageSegmentation(I)
     %ab(rows, :) = []; 
     %nrows = size(ab,1);
     %ncols = size(ab,2);
-nColors = 2;
-% repeat the clustering 3 times to avoid local minima
-%options = statset('Display', 'final');
-[cluster_idx, cluster_center] = kmeans(ab,nColors,'distance','sqeuclidean', ...
+    sumd = zeros(2,1);
+    
+for j = 2:3
+  nColors = j;
+    % repeat the clustering 3 times to avoid local minima
+  %options = statset('Display', 'final');
+    [cluster_idx, cluster_center, sum_d] = kmeans(ab,nColors,'distance','sqeuclidean', ...
           'Replicates',3);
+    sumd(j,1) = sum(sum_d);
+end
+
+r = sumd(2)/sumd(3); 
+
+if((sumd(2)/sumd(3)) > 1.7)
+    nColors = 3;
+else 
+    nColors = 2;
+end
+
+nColors;
+[cluster_idx, cluster_center, sum_d] = kmeans(ab,nColors,'distance','sqeuclidean', ...
+          'Replicates',3);
+
+      
+    
 %figure;
     %one = find(cluster_idx == 1);
     %two = find(cluster_idx == 2);
@@ -63,7 +83,8 @@ end
 mean_cluster_value = mean(cluster_center,2);
 [tmp, idx] = sort(mean_cluster_value);
 cashew_cluster_num = idx(nColors);
-
+background  = idx(1);
+Iseg = I - segmented_images{background};
 %nuclei_labels = repmat(uint8(0),[nrows ncols]);
 %nuclei_labels(blue_idx(is_light_blue==false)) = 1;
 %nuclei_labels = repmat(nuclei_labels,[1 1 3]);
@@ -72,7 +93,7 @@ cashew_object = segmented_images{cashew_cluster_num};
 %cashew_object() = 0;
 %figure;
 %imshow(cashew_object), title('Cashew');
-Iseg = cashew_object;
+%Iseg = cashew_object;
 Ibin = ones(size(Iseg));
 Ibin(Iseg == 0) = 0;
 Ibin = imbinarize(Ibin);
