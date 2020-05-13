@@ -5,3 +5,9 @@ The aim of our project was to design a system that recognizes and classifies cas
 Steps Involed are documented in the research review paper in the link given below.
 
 https://documentcloud.adobe.com/link/track?uri=urn:aaid:scds:US:63de21b5-7b37-4234-a73b-f0ab572d526a
+
+Steps to Run:
+
+1. Images for testing and training stored in a folder called 'Images', in respectively names folders 'Testing' and 'Training'.
+
+2. Run main.m on MATLAB 
